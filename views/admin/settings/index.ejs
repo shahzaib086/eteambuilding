@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../partials/head'); %>
+</head>
+
+<body class="light">
+    <%- include('../../partials/header', {page_name: 'settings'} ); %>
+
+    <!-- content here -->
+    <div class="row row-eq-height my-3">
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong> <%= title %> </strong>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <form action="<%= action_url %>" method="POST" class="needs-validation" novalidate>
+                        <table class="table table-striped xdatatable-nowrap f-12">
+                            <tr>
+                                <th width="20%">Title</th>
+                                <th width="40%">Value</th>
+                                <th width="40%">Description</th>
+                            </tr>
+
+                            <% settings.forEach(function(item, key) { %>
+                                <tr>
+                                  <td>
+                                    <%= item.title %>
+                                  </td>
+                                  <td>
+                                    <% if (item.json_params && item.json_params.type === "dropdown") { %>
+                                      <select class="form-control" name="<%= item.key %>">
+                                        <% item.json_params.data.forEach(function(option) { %>
+                                          <option value="<%= option.value %>" <%= (item.value === option.value) ? 'selected' : '' %>>
+                                            <%= option.label %>
+                                          </option>
+                                        <% }); %>
+                                      </select>
+                                    <% } else if (item.json_params && item.json_params.type === "multiselect") { %>
+                                      <select class="form-controlx custom-select select2" name="<%= item.key %>" multiple="multiple">
+                                        <% var data = item.value.split(','); %>
+                                        <% item.json_params.data.forEach(function(option) { %>
+                                          <option value="<%= option.value %>" <%= (data.includes(option.value)) ? 'selected' : '' %>>
+                                            <%= option.label %>
+                                          </option>
+                                        <% }); %>
+                                      </select>
+                                    <% } else if (item.json_params && item.json_params.type === "textarea") { %>
+                                      <textarea class="form-control" name="<%= item.key %>" cols="10" rows="3"><%= item.value %></textarea>
+                                    <% } else { %>
+                                      <input type="text" class="form-control" name="<%= item.key %>" value="<%= item.value %>" maxlength="250">
+                                    <% } %>
+                                  </td>
+                                  <td>
+                                    <%= item.description %>
+                                  </td>
+                                </tr>
+                            <% }); %>
+
+                            <!-- @foreach( $settings as $key=>$item )
+                                <tr>
+                                    <td>
+                                        {{ $item->title }}
+                                    </td>
+                                    <td>
+                                        
+                                        @if( $item->json_params && $item->json_params['type'] == "dropdown" )
+                                        <select class="form-control" name="{{$item->key}}">
+                                            @foreach ($item->json_params['data'] as $option)
+                                            <option value="{{$option['value']}}" @if( $item->value == $option['value'] ) selected @endif
+                                                > {{$option['label']}} </option>
+                                            @endforeach
+                                        </select>
+                                        @elseif( $item->json_params && $item->json_params['type'] == "multiselect" )
+                                        <select class="form-controlx custom-select select2" name="{{$item->key}}[]" multiple="multiple">
+                                            @php 
+                                                $data = explode(',',$item->value);
+                                            @endphp
+                                            @foreach ($item->json_params['data'] as $option)
+                                            <option value="{{$option['value']}}" @if( in_array($option['value'],$data) ) selected @endif
+                                                > {{$option['label']}} </option>
+                                            @endforeach
+                                        </select>
+                                        @elseif( $item->json_params && $item->json_params['type'] == "textarea" )
+                                            <textarea class="form-control" name="{{$item->key}}" cols="10" rows="3">{{$item->value}}</textarea>
+                                        @else
+                                            <input type="text" class="form-control" name="{{$item->key}}" value="{{$item->value}}">
+                                        @endif
+                                    
+                                    </td>
+                                    <td>
+                                        {{ $item->description }}
+                                    </td>
+                                </tr>
+                            @endforeach -->
+
+                        </table>
+
+                        <% if ( permissions.includes('edit-settings') ) { %>
+                        <div>
+                            <button class="btn btn-primary" type="submit">Update</button>
+                        </div>
+                        <% } %>
+                    </form>
+
+                </div>
+
+                <!-- <div class="card-footer white">
+                    test
+                </div> -->
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <%- include('../../partials/footer'); %>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" /> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script> -->
+    <script>
+
+        function copyToClipboard() {
+            $('#generated_password').select();
+            document.execCommand("copy");
+            Toast.fire({ title: "Success", text: "Password copied to clipboard", type: "success" });
+        }
+
+        $(document).ready(function () {
+
+            function generatePassword() {
+                let newpass = Math.random().toString(36).slice(2);
+                $('#generated_password').val(newpass);
+            }
+
+            function setGeneratedPassword() {
+                let password = $('#generated_password').val();
+                $('#password').val(password);
+                $('#generatePasswordModal').modal('hide');
+            }
+
+            $('.open_generate_password_modal').click(function () {
+                generatePassword();
+                $('#generatePasswordModal').modal('show');
+            });
+
+            $('.continue_password').click(function () {
+                setGeneratedPassword();
+            });
+
+            $('.regenerate_password').click(function () {
+                generatePassword();
+            });
+
+            // $('#avatar').dropify();
+            // $('#image').dropify();\
+
+        });
+
+    </script>
+
+</body>
+
+</html>

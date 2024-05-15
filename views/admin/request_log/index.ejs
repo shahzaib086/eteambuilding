@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../partials/head'); %>
+</head>
+
+<body class="light">
+    <%- include('../../partials/header', {page_name: 'request_log'} ); %>
+
+    <!-- content here -->
+    <div class="row row-eq-height my-3">
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header white">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong> <%= title %> </strong>
+                        <div>
+                            <a class="filter_refresh_btn mr-2" href="javascript:void(0)" type="button" > <i class="icon icon-refresh"></i> Refresh </a>
+                            <a class="filter_collapse_btn" data-toggle="collapse" href="#filterCollapseBox" role="button" aria-expanded="false" aria-controls="filterCollapseBox"> <i class="icon icon-filter"></i> Filters </a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+
+                    <div class="row pb-4 collapse filter_collapse_box" id="filterCollapseBox">
+
+                        <div class="col-md-4 col-lg-3">
+                            <label class="col-form-label s-12">Endpoint</label>
+                            <input type="text" class="form-control s-12 filter_input" id="endpoint" placeholder="">
+                        </div>
+            
+                        <div class="col-md-4 col-lg-3">
+                            <label class="col-form-label s-12">Status</label>
+                            <input type="text" class="form-control s-12 filter_input" id="status" placeholder="i.e 200">
+                        </div>
+                        
+                        <div class="col-md-6 col-lg-6">
+                            <label class="col-form-label s-12">Action</label> <br>
+            
+                            <button class="btn btn-sm btn-primary submit_filter"> Submit </button>
+                            <button class="btn btn-sm btn-primary clear_filter ml-2"> Clear </button>
+                            
+                        </div>
+            
+                    </div>
+                    
+                    <table id="listingTable" class="table table-bordered p-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 1%">#</th>
+                                <th class="no-sort">User</th>
+                                <th class="no-sort">Endpoint</th>
+                                <th class="no-sort">Method</th>
+                                <th class="no-sort">Timestamp</th>
+                                <th class="no-sort">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="activityLogDetailModal" tabindex="-1" role="dialog" aria-labelledby="activityLogDetailModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" style="max-width: 75% !important;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Log Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="form-row">
+                        <div class="form-group col-6 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Endpoint</label>
+                            <input type="text" id="modalEndpoint" class="form-control">
+                        </div>
+                        <div class="form-group col-2 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Method</label>
+                            <input type="text" id="modalMethod" class="form-control">
+                        </div>
+                        <div class="form-group col-2 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Status</label>
+                            <input type="text" id="modalStatusCode" class="form-control">
+                        </div>
+                        <div class="form-group col-2 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">IP</label>
+                            <input type="text" id="modalIp" class="form-control">
+                        </div>
+                        <div class="form-group col-12 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Query Params</label>
+                            <input type="text" id="modalQueryParams" class="form-control">
+                        </div>
+                        <div class="form-group col-12 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Timestamp</label>
+                            <input type="text" id="modalTimestamp" class="form-control">
+                        </div>
+                        <!-- <div class="form-group col-6 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Request Time</label>
+                            <input type="text" id="modalRequestTime" class="form-control">
+                        </div>
+                        <div class="form-group col-6 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Response Time</label>
+                            <input type="text" id="modalResponseTime" class="form-control">
+                        </div> -->
+                        <div class="form-group col-6 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Request Headers</label>
+                            <textarea id="modalRequestHeaders" cols="30" rows="3" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group col-6 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Response Headers</label>
+                            <textarea id="modalResponseHeaders" cols="30" rows="3" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group col-6 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Request Body</label>
+                            <textarea id="modalRequestBody" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group col-6 m-0 mb-2">
+                            <label for="role" class="col-form-label s-12">Response Body</label>
+                            <textarea id="modalResponseBody" cols="30" rows="10" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group col-12 m-0">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../../partials/footer'); %>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" /> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script> -->
+    <script>
+
+        if (!myApp) {
+            var myApp = {};
+        }
+
+        myApp.listing = (function() {
+
+            /**
+             * ------------------------------------------------------------------------
+             * Classes
+             * ------------------------------------------------------------------------
+             */
+            const submitFilterBtnClass = '.submit_filter';
+            const clearFilterBtnClass = '.clear_filter';
+            const cellDataClass = '.cell_data';
+
+            /**
+             * ------------------------------------------------------------------------
+             * Ids
+             * ------------------------------------------------------------------------
+             */
+            const listingTableId = '#listingTable';
+            const typeId = '#type';
+            const dateFromId = '#dateFrom'
+            const dateToId = '#dateTo'
+            const userId = '#user'
+            const endpointId = '#endpoint'
+            const methodId = '#method'
+            const statusId = '#status'
+            const activityLogDetailModalId = '#activityLogDetailModal';
+            const modalMethodId = '#modalMethod';
+            const modalStatusCodeId = '#modalStatusCode';
+            const modalEndpointId = '#modalEndpoint';
+            const modalIpId = '#modalIp';
+            const modalQueryParamsId = '#modalQueryParams';
+            const modalRequestTimeId = '#modalRequestTime';
+            const modalResponseTimeId = '#modalResponseTime';
+            const modalRequestHeadersId = '#modalRequestHeaders';
+            const modalResponseHeadersId = '#modalResponseHeaders';
+            const modalRequestBodyId = '#modalRequestBody';
+            const modalResponseBodyId = '#modalResponseBody';
+            const modalTimestampId = '#modalTimestamp';
+
+            const private = (function() {
+
+                const renderListingTable = function() {
+                    if ($.fn.DataTable.isDataTable(listingTableId)) $(listingTableId).DataTable().destroy();
+
+                    let url = "<%= listing_fetch_url %>";
+
+                    // let date_from = $(dateFromId).val();
+                    // let date_to = $(dateToId).val();
+                    // let user = $(userId).val();
+                    // let endpoint = $(endpointId).val();
+                    // let method = $(methodId).val();
+                    let endpoint = $(endpointId).val();
+                    let status = $(statusId).val();
+
+                    const params = {
+                        // date_from, date_to, user, endpoint, method, status
+                        endpoint, status
+                    }
+                    
+                    $(listingTableId).DataTable({
+                        language: { "processing": datatablesLoaderHtml },
+                        columnDefs: [ {
+                            "targets"  : 'no-sort',
+                            "orderable": false,
+                            "order": []
+                        }],
+                        "order": [[ 0, "desc" ]],
+                        "scrollX": true,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: url,
+                            type: "POST",
+                            data: params
+                        },
+                        columns: [
+                            { data: 'id' },  
+                            {  
+                                render: function(data, type, row) {
+                                    if( row.first_name || row.last_name || row.phone_number ){
+                                        return `${row.first_name??''} ${row.last_name??''} <br>(${row.phone_number??''})`;
+                                    } else {
+                                        return '-';
+                                    }
+                                }
+                            },
+                            { data: 'endpoint' },
+                            { data: 'method' },
+                            {  
+                                data: 'created_at',
+                                render: function(data, type, row) {
+                                    return `${row.m_created_at}`
+                                }
+                            },
+                            {  
+                                render: function(data, type, row) {
+                                    return `<span class="cell_data" data-id="${row.id}" >${row.status_code}</span>`;
+                                }
+                            },
+                                        
+                        ],
+                        "drawCallback": function( settings ) {
+                            $(`${listingTableId} tbody tr`).on('click', function() {
+
+                                let id = $(this).find(cellDataClass).data('id');
+                                showLogDetailModal(id);
+
+                            });
+                        } //end drawcallback
+                    });
+                    
+                };
+
+                return {
+                    renderListingTable,
+                    
+                }
+            })();
+
+            const binding = function() {
+
+                $(submitFilterBtnClass).click(function(){
+                    private.renderListingTable();
+                });
+
+                $(clearFilterBtnClass).click(function(){
+                    $('input').val('');
+                    $('select').val('');
+                    private.renderListingTable();
+                });
+
+            };
+
+            /**
+             * Function to get log details and open modal
+             */
+            const showLogDetailModal = (id) => {
+                const url = '<%= detail_fetch_url %>';
+                const data = {
+                    id:id
+                };
+                
+                showLoader();
+                $.post(url, data, function(response) {
+                    if(response.status == true) {
+
+                        $(modalMethodId).val(response.data.method);
+                        $(modalStatusCodeId).val(response.data.status_code);
+                        $(modalEndpointId).val(response.data.endpoint);
+                        $(modalIpId).val(response.data.ip);
+                        $(modalQueryParamsId).val(response.data.query_params);
+                        $(modalRequestTimeId).val(response.data.request_time);
+                        $(modalResponseTimeId).val(response.data.response_time);
+                        $(modalRequestHeadersId).val(response.data.request_header);
+                        $(modalResponseHeadersId).val(response.data.response_header);
+                        $(modalRequestBodyId).val(response.data.request_body);
+                        $(modalResponseBodyId).val(response.data.response_body);
+                        $(modalTimestampId).val(response.data.m_created_at);
+
+                        // Format Text area json
+                        // prettyPrint(modalRequestHeadersId);
+                        prettyPrint(modalRequestBodyId);
+                        prettyPrint(modalResponseBodyId);
+                        $(activityLogDetailModalId).modal('show');
+
+                    } else {
+                        Toast.fire({ title: 'Error', text: response.message, type: "error" });
+                    }
+                    hideLoader();
+                });
+            }
+
+            const init = function() {
+                binding();
+                private.renderListingTable();
+            };
+
+            return {
+                init,
+            }
+        })();
+        
+        
+        $(document).ready(function() {
+            myApp.listing.init();
+        });
+        
+    </script>
+
+</body>
+
+</html>

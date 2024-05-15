@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../partials/head'); %>
+</head>
+
+<body class="light">
+    <%- include('../../partials/header', {page_name: 'promo_code'} ); %>
+
+    <!-- content here -->
+    <div class="row row-eq-height my-3">
+
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong> <%= title %> </strong>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <form action="<%= action_url %>" method="POST" xenctype="multipart/form-data" class="needs-validation @if($errors->any()) was-validatedx @endif" novalidate>
+
+                        <div class="form-row">
+                            
+                            <div class="form-group col-12 mb-3">
+                                <label for="name" class="w-100 text-left">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" placeholder="" value="<%= item ? item.name : null %>" required maxlength="50">
+                                <% if (errors && errors.name) { %>
+                                    <label class="invalid-feedback"><%= errors.name %></label>
+                                <% } %>
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="promo_code" class="w-100 text-left">Promo Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="promo_code" placeholder="" value="<%= item ? item.promo_code : null %>" required maxlength="20">
+                                <% if (errors && errors.promo_code) { %>
+                                    <label class="invalid-feedback"><%= errors.promo_code %></label>
+                                <% } %>
+                            </div>
+
+                            <div class="form-group col-4 mb-3">
+                                <label for="type" class="w-100 text-left">Type <span class="text-danger">*</span></label>
+                                <select name="type" class="form-control" required>
+                                    <option value="">--select--</option>
+                                    <% types.forEach(function(category) { %>
+                                        <option value="<%= category.value %>" <%= (item && item.type === category.value) ? 'selected' : '' %>><%= category.label %></option>
+                                    <% }); %>
+                                </select>
+                                <% if (errors && errors.type) { %>
+                                    <label class="invalid-feedback"><%= errors.type %></label>
+                                <% } %>
+                            </div>
+
+                            <div class="form-group col-8 mb-3">
+                                <label for="value" class="w-100 text-left">Value <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="value" placeholder="" value="<%= item ? item.value : null %>" required maxlength="50">
+                                <% if (errors && errors.value) { %>
+                                    <label class="invalid-feedback"><%= errors.value %></label>
+                                <% } %>
+                            </div>
+
+                            <div class="form-group col-6 mb-3">
+                                <label for="start_date" class="w-100 text-left">Start Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="start_date" placeholder="" value="<%= item ? item.m_start_date : null %>" required>
+                                <% if (errors && errors.start_date) { %>
+                                    <label class="invalid-feedback"><%= errors.start_date %></label>
+                                <% } %>
+                            </div>
+
+                            <div class="form-group col-6 mb-3">
+                                <label for="end_date" class="w-100 text-left">End Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="end_date" placeholder="" value="<%= item ? item.m_end_date : null %>" required>
+                                <% if (errors && errors.end_date) { %>
+                                    <label class="invalid-feedback"><%= errors.end_date %></label>
+                                <% } %>
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="limit" class="w-100 text-left">Limit <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="limit" placeholder="" value="<%= item ? item.limit : null %>" required>
+                                <% if (errors && errors.limit) { %>
+                                    <label class="invalid-feedback"><%= errors.limit %></label>
+                                <% } %>
+                            </div>
+
+                            <div class="form-group col-4 my-2 mb-4">
+                                <div class="d-flex justify-content-left align-items-center">
+                                    <label for="status" class="col-form-label s-12 mr-4">Status</label>
+                                    <div class="material-switch">
+                                        <input id="statusOption" name="status" type="checkbox" <% if (item && item.status == 1) { %>checked<% } %> >
+                                        <label for="statusOption" class="bg-success"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <%- include('../../partials/footer'); %>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
+    <script>
+
+
+        $(document).ready(function () {
+
+            $('#image').dropify();
+
+        });
+
+    </script>
+
+</body>
+
+</html>

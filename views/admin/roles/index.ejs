@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../partials/head'); %>
+</head>
+
+<body class="light">
+    <%- include('../../partials/header', {page_name: 'role'} ); %>
+
+    
+    <!-- content here -->
+    <div class="row row-eq-height my-3">
+
+        <% if ( permissions.includes('add-role') ) { %>
+            <div class="col-md-12">
+                <a href="<%= add_url %>" class="btn btn-primary btn-sm mb-3"><i class="icon icon-plus pr-0"></i> Add New Role </a>
+            </div>
+        <% } %>
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header white">
+
+                    <strong> <%= title %> </strong>
+
+                </div>
+                <div class="card-body">
+
+                    <table id="listingTable" class="table table-bordered p-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 1%">#</th>
+                                <th>Name</th>
+                                <th class="no-sort" style="width: 100px">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+                <!-- <div class="card-footer white">
+                    test
+                </div> -->
+
+            </div>
+        </div>
+
+    </div>
+
+    <%- include('../../partials/footer'); %>
+
+    <script>
+
+        if (!myApp) {
+            var myApp = {};
+        }
+        
+        myApp.listing = (function() {
+        
+            /**
+             * ------------------------------------------------------------------------
+             * Classes
+             * ------------------------------------------------------------------------
+             */
+            const submitFilterBtnClass = '.submit_filter';
+            const clearFilterBtnClass = '.clear_filter';
+        
+            /**
+             * ------------------------------------------------------------------------
+             * Ids
+             * ------------------------------------------------------------------------
+             */
+            const listingTableId = '#listingTable';
+        
+            const private = (function() {
+        
+                const renderListingTable = function() {
+                    if ($.fn.DataTable.isDataTable(listingTableId)) $(listingTableId).DataTable().destroy();
+        
+                    let url = "<%= listing_fetch_url %>";
+                    // let status = $(statusId).val();
+        
+                    const params = {
+                        // "_token": "{{ csrf_token() }}",
+                        // status: status,
+                        // role: role
+                    }
+                    
+                    $(listingTableId).DataTable({
+                        language: { "processing": datatablesLoaderHtml },
+                        // searching: false,
+                        columnDefs: [ {
+                            "targets"  : 'no-sort',
+                            "orderable": false,
+                            "order": []
+                        },
+                        {
+                            "targets": [],
+                            "className": "text-center"
+                        }],
+                        "order": [[ 0, "asc" ]],
+                        "scrollX": true,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: url,
+                            type: "POST",
+                            data: params
+                        },
+                        columns: [
+                            { data: 'id' },  
+                            { data: 'name' },
+                            {   
+                                render: function(data, type, row) {
+                                    return `${row.edit_btn}`;
+                                }
+                            },
+                                        
+                        ],
+                        "drawCallback": function( settings ) {
+        
+                        } //end drawcallback
+                    });
+                    
+                };
+        
+                return {
+                    renderListingTable,
+                    
+                }
+            })();
+        
+            const binding = function() {
+        
+                $(submitFilterBtnClass).click(function(){
+                    private.renderListingTable();
+                });
+        
+                $(clearFilterBtnClass).click(function(){
+                    $('input').val('');
+                    $('select').val('');
+                    private.renderListingTable();
+                });
+        
+            };
+        
+            const init = function() {
+                binding();
+                private.renderListingTable();
+            };
+        
+            return {
+                init,
+            }
+        })();
+        
+        
+        $(document).ready(function() {
+            myApp.listing.init();
+        });
+        
+    </script>
+
+</body>
+
+</html>

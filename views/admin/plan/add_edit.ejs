@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../partials/head'); %>
+    <script src="https://cdn.ckeditor.com/4.19.1/standard/ckeditor.js"></script>
+</head>
+
+<body class="light">
+    <%- include('../../partials/header', {page_name: 'subscription_plan'} ); %>
+
+    <!-- content here -->
+    <div class="row row-eq-height my-3">
+
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong> <%= title %> </strong>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <form action="<%= action_url %>" method="POST" xenctype="multipart/form-data" class="needs-validation @if($errors->any()) was-validatedx @endif" novalidate>
+
+                        <div class="form-row">
+                            
+                            <div class="form-group col-12 mb-3">
+                                <label for="name" class="w-100 text-left">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="name" placeholder="" value="<%= item ? item.name : null %>" required maxlength="150">
+                                <% if (errors && errors.name) { %>
+                                    <label class="invalid-feedback"><%= errors.name %></label>
+                                <% } %>
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="duration" class="w-100 text-left">Duration <span class="text-danger">*</span></label>
+                                <select name="duration" class="form-control" required>
+                                    <option value="">--select--</option>
+                                    <% durations.forEach(function(category) { %>
+                                        <option value="<%= category.value %>" <%= (item && item.duration === category.value) ? 'selected' : '' %>><%= category.label %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="price" class="w-100 text-left">Price (£) <span class="text-danger">*</span></label>
+                                <input type="telephone" class="form-control" name="price" placeholder="" value="<%= item ? item.price : null %>" required>
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="discounted_price" class="w-100 text-left">Discounted Price (£) <span class="text-danger">*</span></label>
+                                <input type="telephone" class="form-control" name="discounted_price" placeholder="" value="<%= item ? item.price : 0 %>" required>
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="profile_access" class="w-100 text-left">Profile Access <span class="text-danger">*</span></label>
+                                <input type="telephone" class="form-control" name="profile_access" placeholder="" value="<%= item ? item.profile_access : null %>" required>
+                                <% if (errors && errors.profile_access) { %>
+                                    <label class="invalid-feedback"><%= errors.profile_access %></label>
+                                <% } %>
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="features" class="w-100 text-left">Features</label>
+                                <textarea class="form-control" name="features" cols="20" rows="10" required><%= item ? item.features : null %></textarea>
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="description" class="w-100 text-left">Description</label>
+                                <textarea class="form-control" name="description" cols="20" rows="10"><%= item ? item.description : null %></textarea>
+                            </div>
+
+                            <div class="form-group col-4 my-2 mb-4">
+                                <div class="d-flex justify-content-left align-items-center">
+                                    <label for="allow_chat" class="col-form-label s-12 mr-4">Allow Live Chat</label>
+                                    <div class="material-switch">
+                                        <input id="allow_chatOption" name="allow_chat" type="checkbox" <% if (item && item.allow_chat == 1) { %>checked<% } %> >
+                                        <label for="allow_chatOption" class="bg-success"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-4 my-2 mb-4">
+                                <div class="d-flex justify-content-left align-items-center">
+                                    <label for="allow_voice_call" class="col-form-label s-12 mr-4">Allow Voice Call</label>
+                                    <div class="material-switch">
+                                        <input id="allow_voice_callOption" name="allow_voice_call" type="checkbox" <% if (item && item.allow_voice_call == 1) { %>checked<% } %> >
+                                        <label for="allow_voice_callOption" class="bg-success"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-4 my-2 mb-4">
+                                <div class="d-flex justify-content-left align-items-center">
+                                    <label for="allow_video_call" class="col-form-label s-12 mr-4">Allow Video Call</label>
+                                    <div class="material-switch">
+                                        <input id="allow_video_callOption" name="allow_video_call" type="checkbox" <% if (item && item.allow_video_call == 1) { %>checked<% } %> >
+                                        <label for="allow_video_callOption" class="bg-success"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-4 my-2 mb-4">
+                                <div class="d-flex justify-content-left align-items-center">
+                                    <label for="status" class="col-form-label s-12 mr-4">Enable</label>
+                                    <div class="material-switch">
+                                        <input id="statusOption" name="status" type="checkbox" <% if (item && item.status == 1) { %>checked<% } %> >
+                                        <label for="statusOption" class="bg-success"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <%- include('../../partials/footer'); %>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script> -->
+    <script>
+
+
+        $(document).ready(function () {
+
+            // const contentIconId = '#contentIcon';
+            // const editorBodyName = 'body';
+            // const isBodyEditorCheckboxSelector = 'input[name="is_body_editor"]';
+
+            // $('#image').dropify();
+
+            // CKEDITOR.replace( editorBodyName );
+
+        });
+
+    </script>
+
+</body>
+
+</html>

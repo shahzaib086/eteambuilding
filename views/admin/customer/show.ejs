@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../partials/head'); %>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" />
+
+</head>
+
+<body class="light">
+    <%- include('../../partials/header', {page_name: 'customer'} ); %>
+
+    <!-- content here -->
+
+    <div class="page">
+        <div>
+            <header class="xblue xaccent-2 xbg-dark-blue bg-blue <%= reports_count>0 ? 'bg-danger':'' %> relative image-bg">
+                <div class="container-fluid text-white">
+                    <div class="row p-t-b-10 ">
+                        <div class="col">
+                            <div class="pb-3">
+                                <div class="image mr-3  float-left">
+                                    <!-- <img class="user_avatar no-b no-p" src="<%= user ? user.m_profile_image : 'null' %>" alt=""> -->
+                                    <a href="<%= user ? user.m_profile_image : '/admin/assets/img/avatar.png' %>" data-lightbox="profile-image" data-title="Profile Picture" class="cursor-zoom-in">
+                                        <img class="user_avatar no-b no-p" src="<%= user ? user.m_profile_image : '/admin/assets/img/avatar.png' %>" alt="">
+                                    </a>
+                                </div>
+                                <div>
+                                    <h6 class="p-t-10"> #<%= user.id %> <%= user.fullname??'' %></h6>
+                                    <%= user.email %>
+                                </div>
+                            </div>
+                        </div>
+                        <% if (reports_count>0) { %>
+                        <div class="col text-right">
+                            <h6>Total reports: <%= reports_count %></h6>
+                        </div>
+                        <% } %>
+                    </div>
+    
+                    <div class="row">
+                        <ul class="nav nav-material nav-material-white responsive-tab" id="v-pills-tab" role="tablist">
+                            <li>
+                                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home"><i class="icon icon-user-circle"></i>Details</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" id="v-pills-gallery-tab" data-toggle="pill" href="#v-pills-gallery" role="tab" aria-controls="v-pills-gallery" aria-selected="false"><i class="icon icon-photo_library"></i>Gallery</a>
+                            </li>
+                            <!-- <li>
+                                <a class="nav-link" id="v-pills-friends-tab" data-toggle="pill" href="#v-pills-friends" role="tab" aria-controls="v-pills-friends" aria-selected="false"><i class="icon icon-users"></i>Friends</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" id="v-pills-dates-tab" data-toggle="pill" href="#v-pills-dates" role="tab" aria-controls="v-pills-dates" aria-selected="false"><i class="icon icon-smiling-face5"></i>Dates</a>
+                            </li> -->
+                        </ul>
+                        <div class="col bg-successx d-flex align-items-center justify-content-end">
+                            <a href="#" class="px-3" target="_blank">Transactions</a>
+                        </div>
+                    </div>
+    
+                </div>
+            </header>
+    
+            <div class="container-fluid animatedParent animateOnce my-3">
+                <div class="animated fadeInUpShort">
+                    <div class="tab-content" id="v-pills-tabContent">
+                        <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                            <div class="row">
+                                <div class="col-md-3 px-0">
+                                    <div class="card ">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <i class="icon icon-smartphone text-primary"></i><strong class="s-12">Phone</strong> <span class="float-right s-12"> <%= user.phone_number??'' %> </span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <i class="icon icon-mail text-success"></i><strong class="s-12">Email</strong> <span class="float-right s-12"><%= user.email??'' %></span>
+                                            </li>
+                                            <!-- <li class="list-group-item">
+                                                <i class="icon icon-navigation text-warning"></i><strong class="s-12">Location</strong> <span class="float-right s-12">1</span>
+                                            </li> -->
+                                            <li class="list-group-item">
+                                                <i class="icon icon-date_range text-secondary"></i><strong class="s-12">DOB</strong> <span class="float-right s-12"><%= user.m_dob??'' %></span>
+                                            </li>
+                                            <li class="list-group-item">
+                                                <i class="icon icon-date_range text-secondary"></i><strong class="s-12">Joined On</strong> <span class="float-right s-12"><%= user.m_created_at??'' %></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card mt-3 mb-3">
+                                        <div class="card-header bg-white">
+                                            <strong class="card-title">Overall Status</strong>
+                                        </div>
+                                        <!-- {{-- <div class="card-header bg-white">
+                                            <strong class="card-title">Heading</strong>
+                                        </div> --}} -->
+                                        <div>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item py-2">
+                                                    <h6 class="d-flex justify-content-between align-items-center">Profile Status
+                                                        <span> <%- user.status_html??'' %> </span>
+                                                    </h6>
+                                                </li>
+                                                
+                                                <li class="list-group-item py-2">
+                                                    <h6 class="d-flex justify-content-between">Phone Verification
+                                                        <span> <%- user.is_phone_verified_html??'' %> </span>
+                                                    </h6>
+                                                </li>
+
+                                                <li class="list-group-item py-2">
+                                                    <h6 class="d-flex justify-content-between">Email Verification
+                                                        <span> <%- user.is_email_verified_html??'' %> </span>
+                                                    </h6>
+                                                </li>
+                                                
+                                            </ul>
+                                        </div>
+    
+                                    </div>
+
+                                    <div class="card mt-3 mb-3">
+                                        <div class="card-header bg-white">
+                                            <strong class="card-title">Subscription</strong>
+                                        </div>
+                                        <!-- {{-- <div class="card-header bg-white">
+                                            <strong class="card-title">Heading</strong>
+                                        </div> --}} -->
+                                        <div>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item py-2">
+                                                    <h6 class="d-flex justify-content-between align-items-center">Status
+                                                        <span> <%- active_subscription? '<label class="badge badge-success">Active</label>':'<label class="badge badge-danger">InActive</label>' %>
+                                                    </h6>
+                                                </li>
+
+                                                <% if (active_subscription) { %>
+                                                    <li class="list-group-item py-2">
+                                                        <h6 class="d-flex justify-content-between">Package
+                                                            <span> <%- active_subscription.name %> </span>
+                                                        </h6>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <h6 class="d-flex justify-content-between">Duration
+                                                            <span> <%- active_subscription.m_start_date %> to <%- active_subscription.m_end_date %> </span>
+                                                        </h6>
+                                                    </li>
+                                                    <li class="list-group-item py-2">
+                                                        <h6 class="d-flex justify-content-between">Amount
+                                                            <span> £ <%- active_subscription.amount %> </span>
+                                                        </h6>
+                                                    </li>
+                                                    <!-- <li class="list-group-item py-2">
+                                                        <h6 class="d-flex justify-content-between">Transaction ID
+                                                            <span> <%- active_subscription.app_user_id %> </span>
+                                                        </h6>
+                                                    </li> -->
+                                                <% } %>
+                                                
+                                            </ul>
+                                        </div>
+    
+                                    </div>
+    
+                                </div>
+                                <div class="col-md-9 pr-0">
+                                    
+                                    <div class="row">
+    
+                                        <div class="col-md-4 col-sm-6 mb-3">
+                                            <div class="card r-3">
+                                                <div class="p-3">
+                                                    <div class="counter-title"> <h5> Attributes </h5> </div>
+                                                    <hr class="my-2">
+                                                    <h6 class="sc-counterx mt-2 d-flex justify-content-between"> 
+                                                        <span>Gender</span>
+                                                        <span><%= attributes?( (attributes.gender??'').toUpperCase()+(attributes.gender_detail?' ('+attributes.gender_detail+')':'') ):'-' %></span>
+                                                    </h6>
+                                                    <hr class="my-2">
+                                                    <h6 class="sc-counterx mt-2 d-flex justify-content-between"> 
+                                                        <span>Religion</span>
+                                                        <span><%= attributes? (attributes.religion??'-') : '-' %> <%= attributes? (attributes.other_religion??'') : '' %></span>
+                                                    </h6>
+                                                    <hr class="my-2">
+                                                    <h6 class="sc-counterx mt-2 d-flex justify-content-between"> 
+                                                        <span>Education</span>
+                                                        <span><%= attributes? (attributes.education??'-') : '-' %></span>
+                                                    </h6>
+                                                    <hr class="my-2">
+                                                    <h6 class="sc-counterx mt-2 d-flex justify-content-between"> 
+                                                        <span>Work</span>
+                                                        <span><%= attributes? (attributes.work??'-') : '-' %> <%= attributes? (attributes.other_work??'') : '' %></span>
+                                                    </h6>
+                                                    <hr class="my-2">
+                                                    <h6 class="sc-counterx mt-2 d-flex justify-content-between"> 
+                                                        <span>Community</span>
+                                                        <span><%= attributes? (attributes.community??'-') : '-' %> <%= attributes? (attributes.other_community??'') : '' %></span>
+                                                    </h6>
+                                                    <hr class="my-2">
+                                                    <h6 class="sc-counterx mt-2 d-flex justify-content-between"> 
+                                                        <span>Like to date</span>
+                                                        <span><%= attributes? (attributes.like_to_date??'-') : '-' %></span>
+                                                    </h6>
+                                                    <hr class="my-2">
+                                                    <h6 class="sc-counterx mt-2 d-flex justify-content-between"> 
+                                                        <span>Relationship Type</span>
+                                                        <span><%= attributes? (attributes.relationship_type??'-') : '-' %></span>
+                                                    </h6>
+                                                    <hr class="my-2">
+                                                    <h6 class="sc-counterx mt-2 d-flex justify-content-between"> 
+                                                        <span>Age Preference</span>
+                                                        <span><%= (attributes && attributes.age_preference_start && attributes.age_preference_end)? (attributes.age_preference_start+' to '+attributes.age_preference_end+' years') : '-' %></span>
+                                                    </h6>
+                                                    <hr class="my-2">
+                                                    <h6 class="sc-counterx mt-2 d-flex justify-content-between"> 
+                                                        <span>User Height</span>
+                                                        <span><%= attributes? (attributes.height??'-') : '-' %></span>
+                                                    </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-6 mb-3">
+                                            <div class="card r-3">
+                                                <div class="p-3">
+                                                    <div class="counter-title"> <h5> Question and Answers </h5> </div>
+                                                    <% if (questions.length > 0) { %>
+                                                        <% for (const question of questions) { %>
+                                                            <hr class="my-2">
+                                                            <h6 class="sc-counterx mt-2"> <strong> Q <%= question.sequence %>. </strong> <%= question.question %></h6>
+                                                            <h6 class="sc-counterx mt-2">A. <%= question.answer %></h6>
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <p class="d-flex flex-column align-items-center mt-4">
+                                                            <img src="/admin/assets/img/svg/no_data.svg" height="60" alt="">
+                                                            <span class="text-muted mt-2"> No Data </span>
+                                                        </p>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-6 mb-3">
+                                            <div class="card r-3">
+                                                <div class="p-3">
+                                                    <div class="counter-title"> <h5> Characteristics </h5> </div>
+                                                    <% if (characters.length > 0) { %>
+                                                        <% for (const character of characters) { %>
+                                                          <h6 class="sc-counterx mt-2"> • <%= character.name %></h6>
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <p class="d-flex flex-column align-items-center mt-4">
+                                                            <img src="/admin/assets/img/svg/no_data.svg" height="60" alt="">
+                                                            <span class="text-muted mt-2"> No Data </span>
+                                                        </p>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-6 mb-3">
+                                            <div class="card r-3">
+                                                <div class="p-3">
+                                                    <div class="counter-title "> <h5> Interests </h5> </div>
+                                                    <% if (interests_category.length > 0) { %>
+                                                        <% interests_category.forEach(function(cat) { %>
+                                                          <h6 class="sc-counterx mt-2"><%= cat %></h6>
+                                                          <% interests[cat].forEach(function(interest) { %>
+                                                            <h6 class="sc-counterx mt-2"> • <%= interest.name %></h6>
+                                                            <!--  -->
+                                                          <% }) %>
+                                                        <% }) %>
+                                                    <% } else { %>
+                                                        <p class="d-flex flex-column align-items-center mt-4">
+                                                            <img src="/admin/assets/img/svg/no_data.svg" height="60" alt="">
+                                                            <span class="text-muted mt-2"> No Data </span>
+                                                        </p>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-6 mb-3">
+                                            <div class="card r-3">
+                                                <div class="p-3">
+                                                    <div class="counter-title"> <h5> Height Preferences </h5> </div>
+                                                    <% if (height_prefs.length > 0) { %>
+                                                        <% for (const height of height_prefs) { %>
+                                                          <h6 class="sc-counterx mt-2"> • <%= height.name %></h6>
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <p class="d-flex flex-column align-items-center mt-4">
+                                                            <img src="/admin/assets/img/svg/no_data.svg" height="60" alt="">
+                                                            <span class="text-muted mt-2"> No Data </span>
+                                                        </p>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        
+
+                                    </div>
+    
+    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- <div class="tab-pane fade" id="v-pills-details" role="tabpanel" aria-labelledby="v-pills-details-tab">
+                            
+                            <div class="form-row">
+    
+                                <div class="form-group col-5 mb-3">
+                                    <label for="label" class="w-100 text-left">First Name </label>
+                                    <input type="text" class="form-control" value="1" readOnly>
+                                </div>
+                                <div class="form-group col-5 mb-3">
+                                    <label for="label" class="w-100 text-left">Last Name </label>
+                                    <input type="text" class="form-control" value="2" readOnly>
+                                </div>
+                                <div class="form-group col-5 mb-3">
+                                    <label for="label" class="w-100 text-left">Phone Number </label>
+                                    <input type="text" class="form-control" value="2" readOnly>
+                                </div>
+                                <div class="form-group col-5 mb-3">
+                                    <label for="label" class="w-100 text-left">Email </label>
+                                    <input type="text" class="form-control" value="1" readOnly>
+                                </div>
+    
+                            </div>
+    
+                        </div> -->
+    
+                        <div class="tab-pane fade" id="v-pills-gallery" role="tabpanel" aria-labelledby="v-pills-gallery-tab">
+    
+                            <div class="row">
+                                <% if (gallery.length > 0) { %>
+                                    <% for (const image of gallery) { %>
+                                        <div class="col-3 mx-autox" title="Click to preview">
+                                            <a href="<%= image.image_path??'' %>" data-lightbox="gallery" data-title="Gallery" class="cursor-zoom-in">
+                                                <img src="<%= image.image_path??'' %>" alt="" class="show-profile-pic">
+                                            </a>
+                                        </div>
+                                    <% } %>
+                                <% } else { %>
+                                    <div class="col-3 mx-auto d-flex flex-column align-items-center py-5">
+                                        <img src="/admin/assets/img/svg/no_data.svg" height="200px" alt="">
+                                        <span class="text-muted mt-2"> No Data </span>
+                                    </div>
+                                <% } %>
+                            </div>
+    
+                        </div>
+
+                        <div class="tab-pane fade" id="v-pills-friends" role="tabpanel" aria-labelledby="v-pills-friends-tab">
+    
+                            <div class="row">
+                                Friends listing here...
+                            </div>
+    
+                        </div>
+
+                        <div class="tab-pane fade" id="v-pills-dates" role="tabpanel" aria-labelledby="v-pills-dates-tab">
+    
+                            <div class="row">
+                                Dates listing here...
+                            </div>
+    
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+
+
+    <%- include('../../partials/footer'); %>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" /> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script> -->
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            
+
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../partials/head'); %>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" />
+
+</head>
+
+<body class="light">
+    <%- include('../../partials/header', {page_name: 'customer'} ); %>
+
+    <!-- content here -->
+    <div class="row row-eq-height my-3">
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong> Customer Details </strong>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <form action="<%= action_url %>" method="POST" enctypex="multipart/form-data" class="needs-validation @if($errors->any()) was-validatedx @endif" novalidate>
+
+                        <div class="form-row">
+                            
+                            <div class="form-group col-12 mb-3">
+                                <label for="name" class="w-100 text-left">First Name </label>
+                                <input type="text" class="form-control" name="name" value="<%= user ? user.first_name : null %>" required readOnly maxlength="50">
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="name" class="w-100 text-left">Last Name </label>
+                                <input type="text" class="form-control" name="name" value="<%= user ? user.last_name : null %>" required readOnly maxlength="50">
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="name" class="w-100 text-left">Phone Number </label>
+                                <input type="text" class="form-control" name="name" value="<%= user ? user.phone_number : null %>" required readOnly maxlength="50">
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="email" class="w-100 text-left">Email </label>
+                                <input type="email" class="form-control" name="email" value="<%= user ? user.email : null %>" required readOnly maxlength="100">
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="name" class="w-100 text-left">Date of Birth </label>
+                                <input type="text" class="form-control" name="name" value="<%= user ? user.m_dob : null %>" required readOnly maxlength="50">
+                            </div>
+
+                            <!-- <div class="form-group col-12 mb-3">
+                                <label for="name" class="w-100 text-left">Age </label>
+                                <input type="text" class="form-control" name="name" value="<%= user ? user.m_dob : null %>" required readOnly maxlength="50">
+                            </div> -->
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <!-- <div class="card-footer white">
+                    test
+                </div> -->
+
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong> <%= title %> </strong>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-6 mx-auto" title="Click to preview">
+                            <a href="<%= user ? user.m_profile_image : null %>" data-lightbox="selfie" data-title="Selfie" class="cursor-zoom-in">
+                                <img src="<%= user ? user.m_profile_image : null %>" alt="" class="show-profile-pic">
+                            </a>
+                        </div>
+    
+                                            
+                    </div>
+
+                    <form action="<%= action_url %>" method="POST" enctypex="multipart/form-data" class="needs-validation @if($errors->any()) was-validatedx @endif" novalidate>
+
+
+                        <div class="form-row">
+                            
+                            
+                            <div class="form-group col-12 mb-3">
+                                <label for="reject_reason" class="w-100 text-left">Rejection Reason </label>
+                                <input type="text" class="form-control" name="reject_reason" placeholder="Write a rejection reason here..." value="<%=  user ? user.reject_reason : null %>" <%= (user && [0,2,3].includes(user.status)) ? 'disabled' : '' %> maxlength="255">
+                                <% if (errors && errors.reject_reason) { %>
+                                    <label class="invalid-feedback"><%= errors.reject_reason %></label>
+                                <% } %>
+                            </div>
+
+                            <div class="form-group col-12 mb-3">
+                                <label for="status" class="w-100 text-left">Status <span class="text-danger">*</span></label>
+                                <select name="status" class="form-control" required <%= (user && [0,2,3].includes(user.status) ) ? 'disabled' : '' %> >
+                                    <option value="">--select--</option>
+                                    <!-- <option value="0" <%= (user && user.status == 0) ? 'selected' : '' %> >INCOMPLETE</option> -->
+                                    <option value="1" <%= (user && user.status == 1) ? 'selected' : '' %> >PENDING</option>
+                                    <option value="2" <%= (user && user.status == 2) ? 'selected' : '' %> >APPROVED</option>
+                                    <option value="3" <%= (user && user.status == 3) ? 'selected' : '' %> >REJECTED</option>
+                                    <!-- <option value="4" <%= (user && user.status == 4) ? 'selected' : '' %> >BANNED</option> -->
+                                </select>
+                                <% if (errors && errors.user_status) { %>
+                                    <label class="invalid-feedback"><%= errors.user_status %></label>
+                                <% } %>
+                            </div>
+
+                        </div>
+
+                        <% if (user && !([0,2,3].includes(user.status))) { %>
+                        <div>
+                            <button class="btn btn-primary" type="submit">Update Status</button>
+                        </div>
+                        <% } %>
+
+                    </form>
+
+                </div>
+
+                <!-- <div class="card-footer white">
+                    test
+                </div> -->
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Modal -->
+    
+
+    <%- include('../../partials/footer'); %>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" /> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            
+
+        });
+
+    </script>
+
+</body>
+
+</html>

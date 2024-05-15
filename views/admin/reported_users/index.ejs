@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../../partials/head'); %>
+</head>
+
+<body class="light">
+    <%- include('../../partials/header', {page_name: 'reported_user'} ); %>
+
+    <!-- content here -->
+    <div class="row row-eq-height my-3">
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header white">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong> <%= title %> </strong>
+                        <div>
+                            <a class="filter_refresh_btn mr-2" href="javascript:void(0)" type="button" > <i class="icon icon-refresh"></i> Refresh </a>
+                            <a class="filter_collapse_btn" data-toggle="collapse" href="#filterCollapseBox" role="button" aria-expanded="false" aria-controls="filterCollapseBox"> <i class="icon icon-filter"></i> Filters </a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+
+                    <div class="row pb-4 collapse filter_collapse_box" id="filterCollapseBox">
+
+                        <div class="col-md-4 col-lg-3">
+                            <label class="col-form-label s-12">Reported User</label>
+                            <select class="form-control r-0 light s-12 customer-searchable-dropdown filter_dropdown" id="reportedUser" >
+                                
+                            </select>
+                        </div>
+
+                        <div class="col-md-4 col-lg-3">
+                            <label class="col-form-label s-12">Reported By</label>
+                            <select class="form-control r-0 light s-12 customer-searchable-dropdown filter_dropdown" id="reportedBy" >
+                                
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 col-lg-6">
+                            <label class="col-form-label s-12">Action</label> <br>
+            
+                            <button class="btn btn-sm btn-primary submit_filter"> Submit </button>
+                            <button class="btn btn-sm btn-primary clear_filter ml-2"> Clear </button>
+                            
+                        </div>
+            
+                    </div>
+                    
+                    <table id="listingTable" class="table table-bordered p-0">
+                        <thead>
+                            <tr>
+                                <th style="width: 1%">#</th>
+                                <th>Reported User</th>
+                                <th>Message</th>
+                                <th>Reported By</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <%- include('../../partials/footer'); %>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css" /> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script> -->
+    <script>
+
+        if (!myApp) {
+            var myApp = {};
+        }
+        
+        myApp.listing = (function() {
+        
+            /**
+             * ------------------------------------------------------------------------
+             * Classes
+             * ------------------------------------------------------------------------
+             */
+            const submitFilterBtnClass = '.submit_filter';
+            const clearFilterBtnClass = '.clear_filter';
+        
+            /**
+             * ------------------------------------------------------------------------
+             * Ids
+             * ------------------------------------------------------------------------
+             */
+            const listingTableId = '#listingTable';
+            const reportedUserId = '#reportedUser';
+            const reportedById = '#reportedBy';
+        
+            const private = (function() {
+        
+                const renderListingTable = function() {
+                    if ($.fn.DataTable.isDataTable(listingTableId)) $(listingTableId).DataTable().destroy();
+        
+                    let url = "<%= listing_fetch_url %>";
+                    // let status = $(statusId).val();
+                    let reported_user = $(reportedUserId).val();
+                    let reported_by = $(reportedById).val();
+        
+                    const params = {
+                        // "_token": "{{ csrf_token() }}",
+                        reported_user, reported_by
+                    }
+                    
+                    $(listingTableId).DataTable({
+                        language: { "processing": datatablesLoaderHtml },
+                        searching: false,
+                        columnDefs: [ {
+                            "targets"  : 'no-sort',
+                            "orderable": false,
+                            "order": []
+                        },
+                        {
+                            "targets": [ ],
+                            "className": "text-center"
+                        }],
+                        "order": [[ 0, "desc" ]],
+                        "scrollX": true,
+                        processing: true,
+                        serverSide: true,
+                        ajax: {
+                            url: url,
+                            type: "POST",
+                            data: params
+                        },
+                        columns: [
+                            { data: 'id' },  
+                            {
+                                data: 'profile_id',
+                                render: function( data, type, row ) {
+                                    return `${row.profile_fullname}`;
+                                }
+                            },
+                            { data: 'reason' },
+                            {
+                                data: 'user_id',
+                                render: function( data, type, row ) {
+                                    return `${row.user_fullname}`;
+                                }
+                            },
+                            {
+                                render: function( data, type, row ) {
+                                    return `${row.m_created_at}`;
+                                }
+                            },
+                        ],
+                        "drawCallback": function( settings ) {
+
+                        } //end drawcallback
+                    });
+                    
+                };
+        
+                return {
+                    renderListingTable,
+                    
+                }
+            })();
+        
+            const binding = function() {
+        
+                $(submitFilterBtnClass).click(function(){
+                    private.renderListingTable();
+                });
+        
+                $(clearFilterBtnClass).click(function(){
+                    $('input').val('');
+                    $('select').val('');
+                    private.renderListingTable();
+                });
+        
+            };
+        
+            const init = function() {
+                binding();
+                private.renderListingTable();
+            };
+        
+            return {
+                init,
+            }
+        })();
+        
+        
+        $(document).ready(function() {
+            myApp.listing.init();
+
+            $('.customer-searchable-dropdown').select2({
+                language: {
+                    searching: function () {
+                        return 'Searching...';
+                    }
+                },
+                minimumInputLength: 3,
+                placeholder: "Enter name or phone number",
+                ajax: {
+                    url: '/admin/customers/dropdown',
+                }
+            });
+
+        });
+        
+    </script>
+
+</body>
+
+</html>

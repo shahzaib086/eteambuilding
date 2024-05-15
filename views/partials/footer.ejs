@@ -1,0 +1,39 @@
+</div>
+</div>
+
+</div>
+
+
+
+</div>
+
+<script src="/admin/assets/sweetalert2/sweetalert2.min.js"></script>
+<link rel="stylesheet" href="/admin/assets/sweetalert2/sweetalert2.min.css">
+
+<!--/#app -->
+<script src="/admin/assets/js/app.min.js"></script>
+<script src="/admin/assets/js/main.js"></script>
+
+<script>
+
+
+<% if (toast_type && toast_type.length > 0) { %>
+    Toast.fire({ title: " ", text: "<%= toast_message[0] %>", type: "<%= toast_type[0] %>" });
+<% } %>
+
+const datatablesLoaderHtml = `<div class="plane-container datatable_custom_loader" >
+                        <img src="/admin/assets/img/logo/mlogo_small.png">
+                        <div class="preloader-wrapper big active">
+                            <div class="spinner-layer spinner-blue-only">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>`;
+
+</script>

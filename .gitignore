@@ -1,0 +1,6 @@
+.env
+node_modules/*
+assets/profile/*
+assets/gallery_images/*
+assets/content_images/*
+assets/interest_icons/*
